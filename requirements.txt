@@ -1,0 +1,11 @@
+numpy>=1.26
+scipy>=1.11
+pandas>=2.1
+scikit-learn>=1.4
+torch>=2.2
+wfdb>=4.1
+matplotlib>=3.8
+thop>=0.1.1
+cryptography>=42.0
+kyber-py>=1.0
+dilithium-py>=1.0

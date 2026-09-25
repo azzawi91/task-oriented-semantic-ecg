@@ -1,0 +1,78 @@
+{
+  "0": {
+    "ECG-only": {
+      "auroc": 0.7,
+      "macro_f1": 0.556
+    },
+    "PPG-only": {
+      "auroc": 0.936,
+      "macro_f1": 0.822
+    },
+    "ECG+PPG": {
+      "auroc": 0.771,
+      "macro_f1": 0.636
+    }
+  },
+  "_meta": {
+    "task": "binary stress",
+    "split": "subject-disjoint 9/3/3",
+    "fs": 64,
+    "win_s": 10
+  },
+  "1": {
+    "ECG-only": {
+      "auroc": 0.943,
+      "macro_f1": 0.821
+    },
+    "PPG-only": {
+      "auroc": 0.963,
+      "macro_f1": 0.856
+    },
+    "ECG+PPG": {
+      "auroc": 0.954,
+      "macro_f1": 0.865
+    }
+  },
+  "2": {
+    "ECG-only": {
+      "auroc": 0.671,
+      "macro_f1": 0.628
+    },
+    "PPG-only": {
+      "auroc": 0.91,
+      "macro_f1": 0.776
+    },
+    "ECG+PPG": {
+      "auroc": 0.751,
+      "macro_f1": 0.637
+    }
+  },
+  "3": {
+    "ECG-only": {
+      "auroc": 0.829,
+      "macro_f1": 0.64
+    },
+    "PPG-only": {
+      "auroc": 0.971,
+      "macro_f1": 0.88
+    },
+    "ECG+PPG": {
+      "auroc": 0.91,
+      "macro_f1": 0.807
+    }
+  },
+  "4": {
+    "ECG-only": {
+      "auroc": 0.971,
+      "macro_f1": 0.905
+    },
+    "PPG-only": {
+      "auroc": 0.973,
+      "macro_f1": 0.879
+    },
+    "ECG+PPG": {
+      "auroc": 0.947,
+      "macro_f1": 0.834
+    }
+  }
+}

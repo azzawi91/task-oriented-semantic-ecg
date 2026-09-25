@@ -1,0 +1,10 @@
+\begin{tabular}{lccccrr}
+\toprule
+Input & Raw bytes/window & AUROC & Macro-F1 & Sens.@90\%Spec. & Tokens $L$ & MACs/window \\
+\midrule
+MLII only, 125 Hz & 2500 & 0.833 $\pm$ 0.041 & 0.572 $\pm$ 0.066 & 0.808 $\pm$ 0.082 & 157 & 11,043,504 \\
+Two leads, 125 Hz & 5000 & 0.835 $\pm$ 0.041 & 0.567 $\pm$ 0.018 & 0.726 $\pm$ 0.082 & 157 & 11,113,504 \\
+Two leads, 250 Hz & 10000 & 0.811 $\pm$ 0.051 & 0.533 $\pm$ 0.044 & 0.733 $\pm$ 0.132 & 313 & 31,531,008 \\
+Two leads, 360 Hz (native) & 14400 & 0.776 $\pm$ 0.038 & 0.529 $\pm$ 0.045 & 0.698 $\pm$ 0.127 & 450 & 57,169,680 \\
+\bottomrule
+\end{tabular}

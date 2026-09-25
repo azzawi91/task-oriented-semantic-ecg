@@ -1,0 +1,10 @@
+\begin{tabular}{lccccc}
+\toprule
+Model / protocol & AUROC & AUPRC & Macro-F1 & Sens.@90\%Spec. & F1@op \\
+\midrule
+Spectral-summary code + logistic regression (22 B) & 0.674 $\pm$ 0.020 & -- & 0.432 $\pm$ 0.021 & -- & -- \\
+RR-interval code + logistic regression (22 B) & 0.718 $\pm$ 0.018 & -- & 0.539 $\pm$ 0.023 & -- & -- \\
+Task-oriented codec, de Chazal DS1/DS2 (10 seeds) & 0.835 $\pm$ 0.041 & 0.652 $\pm$ 0.028 & 0.567 $\pm$ 0.018 & 0.726 $\pm$ 0.082 & 0.731 $\pm$ 0.036 \\
+Task-oriented codec, random record-disjoint (3 seeds) & 0.835 $\pm$ 0.024 & 0.609 $\pm$ 0.027 & 0.474 $\pm$ 0.101 & 0.638 $\pm$ 0.116 & 0.704 $\pm$ 0.062 \\
+\bottomrule
+\end{tabular}

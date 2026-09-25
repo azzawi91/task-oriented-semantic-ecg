@@ -1,0 +1,83 @@
+{
+  "raw_bytes_per_decision": 5000,
+  "semantic_bytes_8bit": 60,
+  "latent_dim": 32,
+  "byte_reduction_pct_8bit": 98.8,
+  "rate_fidelity": [
+    {
+      "bits": 8,
+      "payload_bytes": 60,
+      "auroc": 0.8505129542518981,
+      "macro_f1": 0.5287322816247116
+    },
+    {
+      "bits": 6,
+      "payload_bytes": 52,
+      "auroc": 0.8499401475108256,
+      "macro_f1": 0.5282836463676449
+    },
+    {
+      "bits": 4,
+      "payload_bytes": 44,
+      "auroc": 0.8278045724074561,
+      "macro_f1": 0.527975998646579
+    },
+    {
+      "bits": 3,
+      "payload_bytes": 40,
+      "auroc": 0.8210020738110261,
+      "macro_f1": 0.521515414676509
+    },
+    {
+      "bits": 2,
+      "payload_bytes": 36,
+      "auroc": 0.5591949569340945,
+      "macro_f1": 0.33789806685960344
+    }
+  ],
+  "packet_loss": [
+    {
+      "loss_rate": 0.0,
+      "auroc_mean": 0.8505129542518981,
+      "auroc_std": 0.0
+    },
+    {
+      "loss_rate": 0.05,
+      "auroc_mean": 0.8400156719324166,
+      "auroc_std": 0.004495166211678473
+    },
+    {
+      "loss_rate": 0.1,
+      "auroc_mean": 0.8304078595449775,
+      "auroc_std": 0.005297578211465414
+    },
+    {
+      "loss_rate": 0.2,
+      "auroc_mean": 0.8107501848315234,
+      "auroc_std": 0.005354590374595586
+    },
+    {
+      "loss_rate": 0.3,
+      "auroc_mean": 0.7917899054393033,
+      "auroc_std": 0.00953133164129229
+    },
+    {
+      "loss_rate": 0.4,
+      "auroc_mean": 0.7780688601080312,
+      "auroc_std": 0.010752508984554687
+    }
+  ],
+  "bootstrap_8bit": {
+    "auroc": [
+      0.8505129542518981,
+      0.830218607027133,
+      0.8710726324410029
+    ],
+    "macro_f1": [
+      0.5287322816247116,
+      0.5156160154058026,
+      0.5416763675487568
+    ]
+  },
+  "n_test_windows": 1669
+}

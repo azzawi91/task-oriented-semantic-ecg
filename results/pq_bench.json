@@ -1,0 +1,58 @@
+{
+  "backend": "pure-Python reference (kyber-py / dilithium-py), x86 CPU",
+  "ML-KEM-512": {
+    "ek_bytes": 800,
+    "dk_bytes": 1632,
+    "ct_bytes": 768,
+    "ss_bytes": 32,
+    "keygen": {
+      "ms_mean": 1.398,
+      "ms_std": 0.131,
+      "n": 20
+    },
+    "encaps": {
+      "ms_mean": 1.907,
+      "ms_std": 0.059,
+      "n": 20
+    },
+    "decaps": {
+      "ms_mean": 2.77,
+      "ms_std": 0.198,
+      "n": 20
+    }
+  },
+  "ML-DSA-44": {
+    "pk_bytes": 1312,
+    "sig_bytes": 2420,
+    "keygen": {
+      "ms_mean": 4.298,
+      "ms_std": 0.107,
+      "n": 8
+    },
+    "sign": {
+      "ms_mean": 28.339,
+      "ms_std": 9.696,
+      "n": 8
+    },
+    "verify": {
+      "ms_mean": 4.755,
+      "ms_std": 0.067,
+      "n": 8
+    }
+  },
+  "AES-128-GCM_60B": {
+    "encrypt": {
+      "ms_mean": 0.001,
+      "ms_std": 0.001,
+      "n": 2000
+    },
+    "decrypt": {
+      "ms_mean": 0.001,
+      "ms_std": 0.0,
+      "n": 2000
+    },
+    "ciphertext_bytes": 76,
+    "overhead_bytes": 28
+  },
+  "handshake_total_bytes": 5300
+}

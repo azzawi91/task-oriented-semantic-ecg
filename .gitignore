@@ -1,0 +1,31 @@
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+node_modules/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.~lock.*
+*.tmp
+
+# revision experiments: data, caches, checkpoints, logs
+revision/results_revision/
+revision/caches/
+revision/data/
+revision/paper_out/
+revision/run_log.txt
+revision/run_stdout.txt
+revision/status.json
+revision/run.pid
+
+# LaTeX build files
+manuscript/*.aux
+manuscript/*.log
+manuscript/*.out
+manuscript/*.bbl
+manuscript/*.blg
+manuscript/main.pdf
+manuscript/main_review.tex
+manuscript/main_review.pdf

@@ -1,0 +1,65 @@
+{
+  "full_schedule_aggregate": {
+    "auroc": {
+      "mean": 0.8338285023782532,
+      "std": 0.01551982689216415,
+      "min": 0.813136404401562,
+      "max": 0.8505129542518981
+    },
+    "auprc": {
+      "mean": 0.6177813883359785,
+      "std": 0.025425519485521055,
+      "min": 0.5820264312482263,
+      "max": 0.6389562665224003
+    },
+    "macro_f1": {
+      "mean": 0.5483037229722344,
+      "std": 0.020956761055182294,
+      "min": 0.5287322816247116,
+      "max": 0.5773637208975911
+    },
+    "sens_at_spec": {
+      "mean": 0.6627149707087305,
+      "std": 0.06120295970795427,
+      "min": 0.6011904761904762,
+      "max": 0.7462006079027356
+    },
+    "f1_at_op": {
+      "mean": 0.7155846652026557,
+      "std": 0.07361400139099489,
+      "min": 0.6115035317860746,
+      "max": 0.7695924764890282
+    },
+    "alarm_rate": {
+      "mean": 0.3291369911761806,
+      "std": 0.03264701095423916,
+      "min": 0.28413068844807465,
+      "max": 0.3605600933488915
+    }
+  },
+  "n_seeds": 3,
+  "bandwidth_energy": {
+    "raw_bytes": 5000,
+    "sem_bytes_8bit": 60,
+    "sem_bytes_4bit": 44,
+    "reduction_pct_8bit": 98.8,
+    "reduction_pct_4bit": 99.12,
+    "tx_energy_factor_8bit": 83.3,
+    "tx_energy_factor_4bit": 113.6
+  },
+  "post_quantum": {
+    "ML-KEM-512_FIPS203": {
+      "encaps_key_pk_bytes": 800,
+      "decaps_key_sk_bytes": 1632,
+      "ciphertext_bytes": 768,
+      "shared_secret_bytes": 32
+    },
+    "ML-DSA-44_Dilithium2_FIPS204": {
+      "public_key_bytes": 1312,
+      "signature_bytes": 2420
+    },
+    "per_decision_aead_overhead_bytes": 28,
+    "handshake_total_bytes_one_time": 5300,
+    "note": "Handshake is a one-time per-session cost; amortized over a 10 s decision cadence it adds <1 B/s after the first minute. Steady-state per-decision security overhead is the 28-byte AES-128-GCM tag+nonce, already included in the 60 B semantic payload."
+  }
+}

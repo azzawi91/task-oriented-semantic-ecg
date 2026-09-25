@@ -1,0 +1,21 @@
+\begin{tabular}{llrrrrrr}
+\toprule
+Radio & Scheme (encoder, INT8 throughput) & Bytes & $E_\mathrm{tx}$ (mJ) & $E_\mathrm{cpu}$ (mJ) & Total (mJ) & Airtime (ms) & Life (d) \\
+\midrule
+BLE 1M (nRF52840) & Raw window & 5000 & 1.321 & 0 & 1.321 & 45.6 & 208 \\
+ & Full codec, 40 MMAC/s & 60 & 0.026 & 2.751 & 2.776 & 0.88 & 99 \\
+ & Full codec, 100 MMAC/s & 60 & 0.026 & 1.100 & 1.126 & 0.88 & 244 \\
+ & Full codec, 200 MMAC/s & 60 & 0.026 & 0.550 & 0.576 & 0.88 & 478 \\
+ & CNN-only codec, 40 MMAC/s & 60 & 0.026 & 0.147 & 0.172 & 0.88 & 1595 \\
+ & CNN-only codec, 100 MMAC/s & 60 & 0.026 & 0.059 & 0.084 & 0.88 & 3263 \\
+ & CNN-only codec, 200 MMAC/s & 60 & 0.026 & 0.029 & 0.055 & 0.88 & 5009 \\
+\midrule
+802.15.4 (CC2652R) & Raw window & 5000 & 13.660 & 0 & 13.660 & 189.7 & 20 \\
+ & Full codec, 40 MMAC/s & 60 & 0.197 & 2.751 & 2.948 & 2.74 & 93 \\
+ & Full codec, 100 MMAC/s & 60 & 0.197 & 1.100 & 1.298 & 2.74 & 212 \\
+ & Full codec, 200 MMAC/s & 60 & 0.197 & 0.550 & 0.748 & 2.74 & 368 \\
+ & CNN-only codec, 40 MMAC/s & 60 & 0.197 & 0.147 & 0.344 & 2.74 & 799 \\
+ & CNN-only codec, 100 MMAC/s & 60 & 0.197 & 0.059 & 0.256 & 2.74 & 1074 \\
+ & CNN-only codec, 200 MMAC/s & 60 & 0.197 & 0.029 & 0.227 & 2.74 & 1213 \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,24 @@
+{
+  "auroc": {
+    "mean": 0.89,
+    "std": 0.011
+  },
+  "auprc": {
+    "mean": 0.912,
+    "std": 0.007
+  },
+  "macro_f1": {
+    "mean": 0.815,
+    "std": 0.014
+  },
+  "_meta": {
+    "dataset": "PTB-XL 12-lead NORM-vs-abnormal",
+    "split": "official folds 1-8/9/10",
+    "n_train": 2460,
+    "n_val": 285,
+    "n_test": 294,
+    "epochs": 6,
+    "seeds": 5,
+    "n_records": 3039
+  }
+}

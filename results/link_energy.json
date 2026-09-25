@@ -1,0 +1,94 @@
+{
+  "encoder_macs": 3607648.0,
+  "encoder_compute_ms": 90.1912,
+  "encoder_compute_mJ": 0.8928928799999999,
+  "supply_V": 3.0,
+  "radios": {
+    "BLE 1M (nRF52840)": {
+      "Raw ECG window": {
+        "bytes": 5000,
+        "tx_mJ": 1.3213,
+        "compute_mJ": 0.0,
+        "total_mJ": 1.3213,
+        "airtime_ms": 45.642,
+        "energy_factor_vs_raw": 1.0,
+        "est_battery_life_days_CR2032": 208.1
+      },
+      "Semantic 8-bit": {
+        "bytes": 60,
+        "tx_mJ": 0.0255,
+        "compute_mJ": 0.8929,
+        "total_mJ": 0.9184,
+        "airtime_ms": 0.882,
+        "energy_factor_vs_raw": 1.4,
+        "est_battery_life_days_CR2032": 299.4
+      },
+      "Semantic 4-bit": {
+        "bytes": 44,
+        "tx_mJ": 0.0218,
+        "compute_mJ": 0.8929,
+        "total_mJ": 0.9147,
+        "airtime_ms": 0.754,
+        "energy_factor_vs_raw": 1.4,
+        "est_battery_life_days_CR2032": 300.6
+      }
+    },
+    "802.15.4 (CC2652R)": {
+      "Raw ECG window": {
+        "bytes": 5000,
+        "tx_mJ": 13.6597,
+        "compute_mJ": 0.0,
+        "total_mJ": 13.6597,
+        "airtime_ms": 189.718,
+        "energy_factor_vs_raw": 1.0,
+        "est_battery_life_days_CR2032": 20.1
+      },
+      "Semantic 8-bit": {
+        "bytes": 60,
+        "tx_mJ": 0.1974,
+        "compute_mJ": 0.8929,
+        "total_mJ": 1.0903,
+        "airtime_ms": 2.742,
+        "energy_factor_vs_raw": 12.5,
+        "est_battery_life_days_CR2032": 252.2
+      },
+      "Semantic 4-bit": {
+        "bytes": 44,
+        "tx_mJ": 0.1606,
+        "compute_mJ": 0.8929,
+        "total_mJ": 1.0535,
+        "airtime_ms": 2.23,
+        "energy_factor_vs_raw": 13.0,
+        "est_battery_life_days_CR2032": 261.0
+      }
+    }
+  },
+  "per_sweep": {
+    "per": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.4
+    ],
+    "energy_factor_vs_raw": {
+      "BLE 1M (nRF52840)": [
+        1.44,
+        1.51,
+        1.59,
+        1.79,
+        2.03,
+        2.35
+      ],
+      "802.15.4 (CC2652R)": [
+        12.53,
+        13.06,
+        13.65,
+        14.98,
+        16.61,
+        18.63
+      ]
+    }
+  }
+}

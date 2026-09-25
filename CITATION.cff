@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite the following."
+title: "Task-Oriented Semantic Coding for Energy-Efficient and Post-Quantum-Secure Wearable ECG Telemetry"
+authors:
+  - family-names: "Azzawi"
+    given-names: "Mustafa A."
+    orcid: "https://orcid.org/0000-0002-9360-4174"
+year: 2026
+version: "2.0.0"
+license: MIT

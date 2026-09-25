@@ -1,0 +1,13 @@
+\begin{tabular}{cccccc}
+\toprule
+Bits/coeff.\ $b$ & Code (B) & Payload incl.\ AEAD (B) & PTQ AUROC & QAT AUROC & PTQ Macro-F1 \\
+\midrule
+8 & 32 & 60 & 0.835 $\pm$ 0.041 & (same model) & 0.567 $\pm$ 0.018 \\
+6 & 24 & 52 & 0.835 $\pm$ 0.041 & -- & 0.567 $\pm$ 0.018 \\
+4 & 16 & 44 & 0.834 $\pm$ 0.041 & 0.831 $\pm$ 0.034 & 0.568 $\pm$ 0.019 \\
+3 & 12 & 40 & 0.832 $\pm$ 0.038 & 0.812 $\pm$ 0.047 & 0.567 $\pm$ 0.017 \\
+2 & 8 & 36 & 0.721 $\pm$ 0.049 & -- & 0.521 $\pm$ 0.065 \\
+8 ($D$=8, trained with 8 coeff., 5 seeds) & 8 & 36 & 0.829 $\pm$ 0.018 & -- & 0.572 $\pm$ 0.020 \\
+8 ($D$=4, trained with 4 coeff.) & 4 & 32 & 0.829 $\pm$ 0.029 & -- & 0.552 $\pm$ 0.029 \\
+\bottomrule
+\end{tabular}

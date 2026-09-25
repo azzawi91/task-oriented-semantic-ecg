@@ -1,0 +1,49 @@
+{
+  "ECG-only": {
+    "auroc_mean": 0.823,
+    "auroc_std": 0.122,
+    "f1_mean": 0.71,
+    "f1_std": 0.131,
+    "auroc_per_seed": [
+      0.7,
+      0.943,
+      0.671,
+      0.829,
+      0.971
+    ]
+  },
+  "PPG-only": {
+    "auroc_mean": 0.951,
+    "auroc_std": 0.024,
+    "f1_mean": 0.843,
+    "f1_std": 0.039,
+    "auroc_per_seed": [
+      0.936,
+      0.963,
+      0.91,
+      0.971,
+      0.973
+    ]
+  },
+  "ECG+PPG": {
+    "auroc_mean": 0.867,
+    "auroc_std": 0.088,
+    "f1_mean": 0.756,
+    "f1_std": 0.099,
+    "auroc_per_seed": [
+      0.771,
+      0.954,
+      0.751,
+      0.91,
+      0.947
+    ]
+  },
+  "_meta": {
+    "dataset": "WESAD",
+    "task": "binary stress detection",
+    "modalities": "chest ECG + wrist PPG @64Hz",
+    "split": "subject-disjoint 9/3/3",
+    "seeds": 5,
+    "n_windows": 4429
+  }
+}

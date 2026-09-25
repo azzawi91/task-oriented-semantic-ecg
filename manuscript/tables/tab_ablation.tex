@@ -1,0 +1,13 @@
+\begin{tabular}{lcccrr}
+\toprule
+Variant & AUROC & Macro-F1 & Sens.@90\%Spec. & Enc. params & MACs/window \\
+\midrule
+Full model (CNN + 2-layer Transformer, all loss terms) & 0.835 $\pm$ 0.041 & 0.567 $\pm$ 0.018 & 0.726 $\pm$ 0.082 & 42,483 & 11,113,504 \\
+CNN only (Transformer removed) & 0.809 $\pm$ 0.036 & 0.514 $\pm$ 0.039 & 0.666 $\pm$ 0.094 & 4,563 & 593,248 \\
+One Transformer layer & 0.826 $\pm$ 0.023 & 0.574 $\pm$ 0.038 & 0.749 $\pm$ 0.054 & 23,523 & 5,853,376 \\
+No latent $\ell_2$ term ($\lambda=0$) & 0.816 $\pm$ 0.046 & 0.556 $\pm$ 0.060 & 0.721 $\pm$ 0.096 & 42,483 & 11,113,504 \\
+No rate term ($\gamma=0$) & 0.821 $\pm$ 0.038 & 0.563 $\pm$ 0.027 & 0.683 $\pm$ 0.097 & 42,483 & 11,113,504 \\
+No early-exit head & 0.810 $\pm$ 0.052 & 0.549 $\pm$ 0.040 & 0.683 $\pm$ 0.092 & 42,483 & 11,113,504 \\
+Task loss only & 0.780 $\pm$ 0.104 & 0.460 $\pm$ 0.136 & 0.553 $\pm$ 0.348 & 42,483 & 11,113,504 \\
+\bottomrule
+\end{tabular}
