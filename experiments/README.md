@@ -1,15 +1,15 @@
-# Revision experiments (TGCN manuscript)
+# Experiments
 
-Self-contained code for every experiment reported in the manuscript
-*Task-Oriented Semantic Coding for Energy-Efficient and Post-Quantum-Secure Wearable ECG Telemetry* and the
-post-hoc analysis that regenerates every table and figure. It depends only on
+Self-contained code for every experiment reported in the accompanying manuscript
+(*Task-Oriented Semantic Coding for Wearable ECG: A 60-Byte Secure Alternative to
+Waveform Telemetry*) and the post-hoc analysis that regenerates every table and figure. It depends only on
 `numpy`, `scipy`, `scikit-learn`, `torch`, and `matplotlib`; `wfdb_lite.py` reads
 MIT-BIH (format 212) and PTB-XL (format 16) records without the `wfdb` package.
 
 ## Run everything
 
 ```bash
-cd revision
+cd experiments
 bash run.sh /path/to/mitdb/1.0.0                     # MIT-BIH folder that contains 100.dat ... 234.dat
 # optional flags are passed through to run_all.py:
 bash run.sh /path/to/mitdb/1.0.0 --skip-ptbxl        # skip the PTB-XL stage
@@ -20,7 +20,7 @@ bash run.sh /path/to/mitdb/1.0.0 --ptbxl-root /path/to/ptb-xl/1.0.3   # use an e
 awake with `caffeinate`), logs to `run_log.txt` / `status.json`, and is
 resumable: finished (experiment, seed) pairs are skipped, so the same command can
 be re-run after an interruption. Results land in
-`results_revision/<experiment>/seed<k>.{json,npz,pt}`.
+`results_runs/<experiment>/seed<k>.{json,npz,pt}`.
 
 | Stage | Experiment folder(s) | Seeds |
 |---|---|---|
@@ -41,7 +41,7 @@ stage 9 (plus the 1.7 GB PTB-XL download unless `--ptbxl-root` is given).
 ## Regenerate the tables and figures
 
 ```bash
-python analyze.py results_revision caches paper_out
+python analyze.py results_runs caches paper_out
 ```
 
 writes `paper_out/tables/*.tex`, `paper_out/figs/*.pdf`, `paper_out/numbers.tex`
@@ -49,15 +49,14 @@ writes `paper_out/tables/*.tex`, `paper_out/figs/*.pdf`, `paper_out/numbers.tex`
 `paper_out/analysis.json`. The post-training quantization, coefficient-subset,
 channel, energy, and post-quantum analyses in `analyze.py` are NumPy-only and use
 the exported latents, decoder weights, and probabilities from the training runs.
-Copy `tables/`, `figs/` and `numbers.tex` into `../manuscript/` and run
-`bash build.sh` there to rebuild the PDF.
+These are the inputs the manuscript's LaTeX source consumes.
 
 ## Files
 
 * `run_all.py` – orchestrator (resumable, logs, summary)
 * `run.sh` – background launcher
 * `rev_data.py`, `wfdb_lite.py` – MIT-BIH windowing and labels (AAMI EC57 window classes, rhythm annotations)
-* `rev_model.py` – encoder/decoder with the ablation switches (identical to the manuscript's model by default) and an analytic MAC count that includes attention
+* `rev_model.py` – encoder/decoder with the ablation switches (identical to the published configuration by default) and an analytic MAC count that includes attention
 * `rev_train.py` – trains one configuration/seed and exports latents, decoder weights, probabilities, and metrics
 * `rev_recon.py` – reconstruction codecs (convolutional autoencoder, deep JSCC, same-encoder + positional encodings)
 * `rev_ptbxl.py` – PTB-XL download and cache builder

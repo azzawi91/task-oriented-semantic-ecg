@@ -1,10 +1,10 @@
-"""One-command runner for every training experiment of the revision.
+"""One-command runner for every training experiment.
 
     python run_all.py --mitdb "<path to mitdb/1.0.0>" [--seeds 10] [--skip-ptbxl]
 
 Everything is resumable: finished (config, seed) pairs are skipped, so the
 script can be interrupted and re-run. Progress is written to run_log.txt and
-status.json next to this file; results go to results_revision/<config>/.
+status.json next to this file; results go to results_runs/<config>/.
 
 Stages (in order):
   1. window caches      125 Hz two-lead / 125 Hz MLII-only / 250 Hz / 360 Hz
@@ -43,7 +43,7 @@ def status(update):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mitdb", required=True, help="folder containing 100.dat ... 234.dat")
-    ap.add_argument("--out", default=os.path.join(HERE, "results_revision"))
+    ap.add_argument("--out", default=os.path.join(HERE, "results_runs"))
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--skip-ptbxl", action="store_true")
     ap.add_argument("--ptbxl-data", default=os.path.join(HERE, "data"))

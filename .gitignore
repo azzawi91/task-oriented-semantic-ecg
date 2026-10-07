@@ -10,22 +10,12 @@ Thumbs.db
 .~lock.*
 *.tmp
 
-# revision experiments: data, caches, checkpoints, logs
-revision/results_revision/
-revision/caches/
-revision/data/
-revision/paper_out/
-revision/run_log.txt
-revision/run_stdout.txt
-revision/status.json
-revision/run.pid
-
-# LaTeX build files
-manuscript/*.aux
-manuscript/*.log
-manuscript/*.out
-manuscript/*.bbl
-manuscript/*.blg
-manuscript/main.pdf
-manuscript/main_review.tex
-manuscript/main_review.pdf
+# experiments: data, caches, checkpoints, logs
+experiments/results_runs/
+experiments/caches/
+experiments/data/
+experiments/paper_out/
+experiments/run_log.txt
+experiments/run_stdout.txt
+experiments/status.json
+experiments/run.pid

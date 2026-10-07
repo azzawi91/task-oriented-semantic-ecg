@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# One-command launcher for the revision experiments (runs in the background,
+# One-command launcher for the experiments (runs in the background,
 # keeps the Mac awake with caffeinate, resumable: just run it again if interrupted).
 #
 #   bash run.sh                      # uses ../physionet.org - Databases/files/mitdb/1.0.0
