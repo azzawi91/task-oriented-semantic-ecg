@@ -31,6 +31,10 @@ def train_one(cache, name, seed, out_dir, overrides=None, log=print):
     X, y, g = d["X"], d["y"], d["groups"]
     if cfg["split"] == "dechazal":
         tr, va, te = S.dechazal_split(y, g, seed)
+    elif cfg["split"] == "pool":            # DS1-train + all records of the listed external databases; DS1-val; DS2
+        tr, va, te = S.dechazal_split(y, g, seed)
+        gs = g.astype(str); ext = np.where(np.array([any(s.startswith(p + "_") for p in cfg["pool_dbs"]) for s in gs]))[0]
+        tr = np.concatenate([tr, ext])
     elif cfg["split"] == "random":
         tr, va, te = S.record_disjoint_split(y, g, seed)
     elif cfg["split"] == "fold":            # PTB-XL official folds stored in `groups`

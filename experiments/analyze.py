@@ -1,6 +1,6 @@
-"""Post-hoc analysis of the experiments (NumPy / scikit-learn only).
+"""Post-hoc analysis of the revision experiments (NumPy / scikit-learn only).
 
-    python analyze.py <results_runs dir> <cache dir> <paper dir>
+    python analyze.py <results_revision dir> <cache dir> <paper dir>
 
 Writes <paper dir>/tables/*.tex, <paper dir>/figs/*.pdf and <paper dir>/analysis.json.
 Every number in the manuscript tables is produced here from the exported runs.

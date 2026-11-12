@@ -1,21 +1,7 @@
 __pycache__/
 *.pyc
-.venv/
-.ipynb_checkpoints/
-node_modules/
 .DS_Store
-Thumbs.db
-.vscode/
-.idea/
-.~lock.*
-*.tmp
-
-# experiments: data, caches, checkpoints, logs
-experiments/results_runs/
+experiments/work/
 experiments/caches/
-experiments/data/
-experiments/paper_out/
-experiments/run_log.txt
-experiments/run_stdout.txt
-experiments/status.json
-experiments/run.pid
+*.npz
+*.pt

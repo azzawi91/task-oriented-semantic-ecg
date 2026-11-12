@@ -152,8 +152,10 @@ def train_codec(cache, mode, seed, out_dir, epochs=None, lr=2e-3, batch=64, snr_
     res = dict(test_mse=se / cnt, test_prd_pct=100.0 * math.sqrt(num / den), best_val_mse=best[0],
                epochs=epochs, params_enc=count_params(enc), params_dec=count_params(dec),
                train_time_s=time.time() - t0, hist=hist, snr_db=snr_db if mode == "jscc" else None)
+    with torch.no_grad():                      # decoded test windows, for decode-then-diagnose evaluation
+        Xrec = np.concatenate([dec(enc(torch.tensor(X[te[i:i + 256]]))).numpy() for i in range(0, len(te), 256)]).astype(np.float16)
     np.savez_compressed(out_path, Z_tr=Ztr, Z_va=Zva, Z_te=Zte, y_tr=y[tr], y_va=y[va], y_te=y[te],
-                        idx_tr=tr, idx_va=va, idx_te=te)
+                        idx_tr=tr, idx_va=va, idx_te=te, X_rec_te=Xrec)
     json.dump(dict(name="recon_" + mode, seed=seed, **res), open(out_path[:-4] + ".json", "w"), indent=1)
     log("  DONE recon_%s seed %d: test MSE %.4f  PRD %.1f%%  (%.0fs)" % (mode, seed, res["test_mse"], res["test_prd_pct"], res["train_time_s"]))
     return res

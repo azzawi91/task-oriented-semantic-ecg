@@ -1,110 +1,81 @@
-# Task-Oriented Semantic Coding for Wearable ECG: A 60-Byte Secure Alternative to Waveform Telemetry
+# How many bytes does an arrhythmia decision need?
 
-Reference implementation and reproducibility package for a task-oriented (goal-oriented)
-semantic-coding scheme for wearable electrocardiogram (ECG) telemetry. Instead of transmitting
-the raw waveform, a compact on-device encoder (42,483 parameters) maps a 10-second multi-lead
-window to a 32-coefficient latent that is quantized, sealed by an authenticated record layer, and
-decoded at an edge gateway directly into an arrhythmia decision. The accompanying manuscript studies the rate-fidelity trade-off, channel robustness, on-device compute versus
-radio energy, and a post-quantum-ready security layer.
+**Task-oriented compression of wearable ECG.** Code, results and figures for the manuscript of the same name (under review).
 
-> Author: Mustafa A. Azzawi — Independent Researcher, New York, NY, USA — ORCID 0000-0002-9360-4174
+A wearable ECG patch normally sends the waveform, or a compressed version of it, and a computer at the other end decides whether the rhythm is abnormal. This project asks a narrower question: if the receiver only needs the *decision*, how few bytes can the patch send?
 
-![Conventional versus task-oriented ECG telemetry: the node sends a 60-byte authenticated latent instead of a 5000-byte raw window](figures/fig0_intro_concept.png)
+![Two ways to use a small byte budget](figures/fig_concept.png)
 
-*Conventional versus task-oriented ECG telemetry. Raw transmission sends about 5000 bytes per 10-s window; the proposed node sends a 60-byte authenticated latent that the gateway decodes directly into a decision.*
+## Main results
 
-## Summary
+All numbers are AUROC on the 22 DS2 test records of the MIT-BIH Arrhythmia Database, which are never used for training or calibration. The task is the three-class AAMI decision for each 10-second window: normal, supraventricular ectopy, ventricular ectopy.
 
-A battery-powered ECG patch spends most of its energy and airtime on the radio, and most of what
-it sends never changes the clinical decision at the other end. This work transmits **the
-decision-relevant content, not the samples**: a task-trained latent of 32 INT8 coefficients
-(60 bytes per decision including the 28-byte authenticated-encryption overhead) replaces the
-5000-byte raw window. Matched-payload comparisons against reconstruction codecs trained with
-equal care — including one that uses the identical encoder architecture — and against PCA,
-spectral-summary, and RR-interval codes show that the *training objective*, not the
-architecture, is what makes the bytes useful. An analytical energy model that counts attention
-operations explicitly locates the compute-radio crossover, and a CNN-only variant is identified
-as the deployable low-energy point.
-
-## Key results (`experiments/` pipeline; MIT-BIH de Chazal DS1/DS2, 10 seeds unless noted)
-
-| Result | Value |
+| Code sent per 10-s window (raw window: 5000 bytes) | AUROC |
 |---|---|
-| Inter-patient arrhythmia decision (normal / SVEB / VEB), 60-byte payload | AUROC **0.835 ± 0.041**, operating-point F1 0.731 ± 0.036 |
-| Same protocol, hand-crafted codes read by the same classifier | spectral-summary code 0.674, RR-interval code 0.718 |
-| Matched-payload comparison at 16 bytes (linear readout) | task code **0.812**; same encoder trained for reconstruction 0.642; conv-AE 0.537; deep JSCC 0.580; PCA 0.515 |
-| Ablation: CNN-only encoder (0.59 M MACs/window, 19x fewer) | 0.809 ± 0.036 |
-| Post-training quantization (8 / 6 / 4 / 3 / 2 bits per coefficient) | 0.835 / 0.835 / 0.834 / 0.832 / 0.721; quantization-aware training adds nothing |
-| 4- and 8-coefficient codecs trained from scratch (4- and 8-byte codes) | 0.829 ± 0.029 (10 seeds) and 0.829 ± 0.018 (5 seeds) |
-| Channel robustness (no retraining) | 40 % i.i.d. erasure 0.818, fragment erasure 0.804, Gilbert-Elliott bursty erasure 0.799; BER 1e-2 0.830 |
-| Single lead (MLII) / 250 Hz / 360 Hz input | 0.833 / 0.811 / 0.776 |
-| PTB-XL transfer, 12 leads, NORM vs. abnormal: all 21,378 records with a diagnostic superclass, official folds 1-8 / 9 / 10 (5 seeds) | AUROC **0.920 ± 0.004**, AUPRC 0.948 ± 0.002, macro-F1 0.830 ± 0.006 |
-| WESAD multimodal stress (5 seeds, subject-disjoint) | ECG-only 0.823, PPG-only 0.951, ECG+PPG 0.867 |
-| Payload and airtime (BLE 1M) | 5000 -> 60 B per decision (**98.8 %** reduction); airtime 45.6 -> 0.88 ms (52x) |
-| Energy (analytical model, attention MACs counted) | full codec on BLE: crossover at ~85 MMAC/s of INT8 throughput; CNN-only codec 7.7x lower than raw on BLE, 39.7x on IEEE 802.15.4 |
-| Post-quantum layer (pqm4 Cortex-M4 cycle counts, 64 MHz) | node-side handshake (ML-KEM-512 keygen + decaps, ML-DSA-44 verify) ~35 ms / 0.35 mJ; 3988 handshake bytes |
+| Task-oriented code, **4 bytes** | **0.878 ± 0.019** |
+| Task-oriented code, 1 byte | 0.852 ± 0.033 |
+| Task-oriented code, 32 bytes | 0.859 ± 0.040 |
+| Wavelet coder, 4 bytes, decode then classify | 0.719 ± 0.005 |
+| Wavelet coder, 16 bytes, decode then classify | 0.778 ± 0.009 |
+| Wavelet coder, 256 bytes, decode then classify | 0.855 ± 0.035 |
+| Hand-crafted RR-interval code, 22 bytes | 0.718 ± 0.002 |
 
-All energy and cryptographic figures are model-based (published datasheet and cycle-count
-parameters), not on-device measurements. Every number above is regenerated by
-`experiments/analyze.py` from the training-run exports (`experiments/results/analysis.json` holds the
-full output).
+![Diagnostic rate-distortion curve](figures/fig_rd.png)
+
+- **The encoder is tiny:** 3,163 parameters and 0.59 million multiply-accumulate operations per window.
+- **Training data matters most:** the same 4-byte codec trained on DS1 only (22 records) reaches 0.790; trained on three databases (171 records) it reaches 0.878.
+- **A wavelet compressor needs about 256 bytes** to support the same decision after decoding.
+
+### What the learned code does *not* do better
+
+These results are reported in the paper and matter for anyone building on this work.
+
+- With one database held out of training, the 4-byte code reaches 0.796 on St Petersburg INCART and 0.779 on the MIT-BIH Supraventricular Arrhythmia Database.
+- For the simple abnormal-versus-normal question, a hand-crafted RR-interval code is better than the learned code on both held-out databases (0.862 vs 0.816 on INCART; 0.952 vs 0.759 on the Supraventricular database).
+- All results are computational. Nothing was measured on hardware.
+
+![External validation](figures/fig_xdb.png)
 
 ## Repository layout
 
 ```
-experiments/ code for every experiment and analysis (see experiments/README.md)
-src/         earlier pipeline (v1.0 release): encoder, data loaders, training, sweeps, energy/security analysis
-scripts/     one-command reproduction scripts of the v1.0 release
-results/     result files of the v1.0 release (JSON)
-figures/     figures of the v1.0 release
+experiments/   all code: data caches, models, training runners, evaluation, figures
+results/       result files behind every number in the paper (no raw data, no model weights)
+figures/       figures used in this README and in the paper
 ```
 
-The manuscript is under review; a link will be added here once it is published.
+| File in `results/` | Contents |
+|---|---|
+| `per_seed_results.json` | metrics of all 288 training runs (49 configurations), one entry per seed |
+| `new_eval2.json` | three-database experiments: code-size sweep, wavelet coder, leave-one-database-out, paired tests |
+| `new_eval.json` | DS1-only experiments: wavelet/DCT coder, zero-shot external tests, autoencoders |
+| `analysis_ds1_only.json` | DS1-only tables (Transformer encoder, ablations, quantization) |
+| `classic_prd.json` | reconstruction error of the wavelet and DCT coders per byte budget |
 
-## Installation
+## Reproduce
+
+Requirements: Python 3.10 or newer, about 2 GB of disk for the data, and 6 to 8 CPU-hours on two cores (no GPU needed).
 
 ```bash
-python -m venv .venv && source .venv/bin/activate     # Python >= 3.9
-pip install numpy scipy scikit-learn torch matplotlib
+git clone https://github.com/azzawi91/task-oriented-semantic-ecg.git
+cd task-oriented-semantic-ecg
+pip install -r requirements.txt
+cd experiments
+bash run_all.sh
 ```
+
+`run_all.sh` downloads the three open PhysioNet databases, builds the window caches, trains every configuration, and writes the tables and figures to `experiments/work/paper/`. Every step is resumable. See [`experiments/README.md`](experiments/README.md) for what each script does and how to run a single experiment.
+
+Exact numbers depend on the PyTorch version and CPU; the published numbers were produced with PyTorch 2.15 (CPU). Expect differences in the third decimal.
 
 ## Data
 
-The experiments use openly available datasets (downloaded separately; no patient data is
-redistributed here):
-
-- **MIT-BIH Arrhythmia Database** (PhysioNet) — primary benchmark, de Chazal inter-patient protocol.
-- **PTB-XL** (PhysioNet) — 12-lead transfer evaluation on the official stratified folds.
-- **WESAD** (UCI) — synchronized chest ECG + wrist PPG for the multimodal evaluation (v1.0 pipeline, `src/train_wesad.py`).
-
-## Reproducing the results
-
-```bash
-cd experiments
-bash run.sh /path/to/mitdb/1.0.0 [--ptbxl-root /path/to/ptb-xl/1.0.3]   # trains everything (resumable)
-python analyze.py results_runs caches paper_out                      # tables/*.tex, figs/*.pdf, numbers.tex, analysis.json
-```
-
-All training is CPU-friendly; a GPU is not required.
-
-## Changes since the v1.0 release
-
-* MAC counts now include the attention projections and score/context products: 11.1 M per
-  window at 125 Hz. The earlier figure (3.6 M) came from a profiler that skips
-  `nn.MultiheadAttention`; the BLE energy saving reported by v1.0 was therefore overstated.
-* Reconstruction baselines are retrained to convergence with validation-based selection and
-  unclipped codes, and a symmetric control (identical encoder, positional encodings, trained for
-  reconstruction versus for the task) is added.
-* The loss is documented exactly as implemented (`src/config.py`); a stale configuration file
-  from an unrelated project was removed.
-* The v1.0 pipeline (`src/`, `scripts/`, `results/`) produced the earlier headline numbers
-  (de Chazal AUROC 0.802 ± 0.046, PTB-XL subset 0.890 ± 0.011); it is kept for reference. The
-  current results come from the `experiments/` pipeline.
-
-## License
-
-Code is released under the MIT License (see `LICENSE`).
+No data are stored in this repository. All four databases are public on [PhysioNet](https://physionet.org): MIT-BIH Arrhythmia Database, MIT-BIH Supraventricular Arrhythmia Database, St Petersburg INCART 12-lead Arrhythmia Database, and PTB-XL.
 
 ## Citation
 
-See `CITATION.cff`.
+See `CITATION.cff`. The manuscript is under review; the citation will be updated when it is published.
+
+## License
+
+MIT (see `LICENSE`).
