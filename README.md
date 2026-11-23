@@ -4,7 +4,7 @@
 
 A wearable ECG patch normally sends the waveform, or a compressed version of it, and a computer at the other end decides whether the rhythm is abnormal. This project asks a narrower question: if the receiver only needs the *decision*, how few bytes can the patch send?
 
-![Two ways to use a small byte budget](figures/fig_concept.png)
+![Two ways to use a small byte budget](figures/fig_concept.png) 
 
 ## Main results
 
