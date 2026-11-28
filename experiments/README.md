@@ -18,6 +18,20 @@ Run everything with `bash run_all.sh` from this folder, or follow the steps belo
 | 10 | `new_analyze2.py` | Tables, figures and numbers of the manuscript |
 | 11 | `new_figs_static.py`, `new_figs_extra.py` | Concept figure, reconstruction example, per-seed plot, external-validation plot |
 
+## Later experiments (run after the steps above)
+
+| Step | Script | What it does |
+|---|---|---|
+| 12 | `new_runner7.py` | Seven more Transformer seeds; record-mixed control (half of the DS2 windows admitted to training) |
+| 13 | `new_runner8.py` | Training sets of 18, 36 and 72 records at an equal number of training steps; first cross-validation batch |
+| 14 | `new_runner9.py` | Nine more repetitions of patient-level five-fold cross-validation, each with its own partition |
+| 15 | `new_stats.py ds2`, `ext`, `late`, `cvlc`; `new_lc2.py` | Paired two-level bootstrap (patients x seeds) for every comparison; writes `work/new_stats.json` |
+| 16 | `new_hybrid.py`, `new_hybrid2.py` | Hybrid code (4 learned bytes + 10 RR statistics) on DS2 and the two held-out databases; 32-byte and per-class controls |
+| 17 | `new_cvrep.py hyb`, `rate`, `pop` | Hybrid code, code size and training set under repeated cross-validation (fast bootstrap, `fastboot.py`) |
+| 18 | `new_edb_cache.py`, `new_confirm.py`, `new_confirm2.py` | Confirmatory test on the European ST-T Database, as fixed in `../CONFIRMATION_PLAN.md` |
+
+The European ST-T Database is expected in `work/data/edb/1.0.0` (download from https://physionet.org/files/edb/1.0.0/). The RR-feature files `caches/rr_features_fs125.npy`, `caches/rr_svdb.npy` and `caches/rr_incart.npy` are `rev_np.rr_features(X, 125)` applied to the three window caches.
+
 ## Library modules
 
 | Module | Contents |
@@ -45,4 +59,4 @@ The DS2 metrics are printed and saved to `work/res/demo/seed0.json`.
 
 - The runners can be started several times in parallel (`python new_runner4.py 1 &`, `python new_runner4.py 2 &`); they share work through lock folders in `work/`.
 - Some configurations in the runners list ten seeds where the paper reports five or three. The seeds actually used are in `../results/per_seed_results.json`.
-- File paths were made configurable after the published runs. The scripts were compile-checked afterwards but the full pipeline was not re-run end to end from a clean clone; please open an issue if a step fails.
+- File paths were made configurable after the runs reported in the paper. The scripts were compile-checked afterwards but the full pipeline was not re-run end to end from a clean clone; please open an issue if a step fails.

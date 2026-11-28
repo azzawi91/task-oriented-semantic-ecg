@@ -1,5 +1,7 @@
 """Evaluation protocols (identical to the published code: dechazal.py and
 run_mitbih_experiment.patient_split)."""
+import os as _os
+WORK = _os.environ.get("ECG_WORK", _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "work"))  # data, runs and outputs live here
 import numpy as np
 
 DS1 = ["101", "106", "108", "109", "112", "114", "115", "116", "118", "119", "122", "124",
@@ -41,3 +43,20 @@ def fold_split(groups):
     """PTB-XL official stratified folds stored as strings '1'..'10' in `groups`."""
     f = groups.astype(int)
     return np.where(f <= 8)[0], np.where(f == 9)[0], np.where(f == 10)[0]
+
+
+def patient_ids(groups, incart_root=(WORK + "/data/incartdb/1.0.0")):
+    """Patient identifier per window. MIT-BIH records 201 and 202 are one subject; INCART records are mapped to
+    patients from the '# patient N' line of each header; paced MIT-BIH records return None."""
+    import os, re
+    cache = {}
+    def one(gname):
+        if gname in cache: return cache[gname]
+        if gname.startswith("incart_"):
+            rec = gname.split("_", 1)[1]; txt = open(os.path.join(incart_root, rec + ".hea"), errors="ignore").read()
+            m = re.search(r"#\s*patient\s+(\d+)", txt); v = "incart:p%s" % (m.group(1) if m else rec)
+        elif gname.startswith("svdb_"): v = "svdb:" + gname.split("_", 1)[1]
+        elif gname in DS1 or gname in DS2: v = "mit:" + ("201" if gname == "202" else gname)
+        else: v = None
+        cache[gname] = v; return v
+    return [one(str(x)) for x in groups]

@@ -1,40 +1,41 @@
-# How many bytes does an arrhythmia decision need?
+# Ten rhythm bytes outperform twenty-eight learned ones
 
-**Task-oriented compression of wearable ECG.** Code, results and figures for the manuscript of the same name (under review).
+**Content, not size, limits compact ECG codes on unseen patients.** Code, results and figures for the manuscript "Ten Rhythm Bytes Outperform Twenty-Eight Learned Ones in Compact ECG Codes".
 
-A wearable ECG patch normally sends the waveform, or a compressed version of it, and a computer at the other end decides whether the rhythm is abnormal. This project asks a narrower question: if the receiver only needs the *decision*, how few bytes can the patch send?
+A wearable ECG patch normally sends the waveform, or a compressed version of it, and a computer at the other end decides whether the rhythm is abnormal. If the receiver only needs the *decision*, the patch can send a code of a few bytes instead. This project asks what limits such a code on patients and databases it has never seen: how many bytes it has, or what the bytes hold.
 
-![Two ways to use a small byte budget](figures/fig_concept.png) 
+![Two ways to use a small byte budget](figures/fig_concept.png)
 
 ## Main results
 
-All numbers are AUROC on the 22 DS2 test records of the MIT-BIH Arrhythmia Database, which are never used for training or calibration. The task is the three-class AAMI decision for each 10-second window: normal, supraventricular ectopy, ventricular ectopy.
+The task is the three-class AAMI decision for each 10-second, two-lead window: normal, supraventricular ectopy, ventricular ectopy. Numbers are macro-averaged AUROC. Differences are paired, with bootstrap 95% intervals over test patients and training runs.
 
-| Code sent per 10-s window (raw window: 5000 bytes) | AUROC |
-|---|---|
-| Task-oriented code, **4 bytes** | **0.878 ± 0.019** |
-| Task-oriented code, 1 byte | 0.852 ± 0.033 |
-| Task-oriented code, 32 bytes | 0.859 ± 0.040 |
-| Wavelet coder, 4 bytes, decode then classify | 0.719 ± 0.005 |
-| Wavelet coder, 16 bytes, decode then classify | 0.778 ± 0.009 |
-| Wavelet coder, 256 bytes, decode then classify | 0.855 ± 0.035 |
-| Hand-crafted RR-interval code, 22 bytes | 0.718 ± 0.002 |
+**More learned bytes add nothing. Ten bytes of RR-interval statistics add about 0.11.**
+
+| Evaluation | Learned, 4 B | Learned, 32 B | RR intervals, 22 B | Hybrid, 14 B (4 learned + 10 RR) | Hybrid minus learned 32 B |
+|---|---|---|---|---|---|
+| 10 x 5-fold cross-validation, 153 patients | 0.815 | 0.818 | 0.835 | **0.928** | +0.110 (+0.084 to +0.136) |
+| DS2 of MIT-BIH Arrhythmia, 22 patients | 0.878 | 0.859 | 0.718 | **0.916** | +0.058 (+0.011 to +0.133) |
+| MIT-BIH Supraventricular, held out of training, 78 patients | 0.779 | 0.760 | 0.856 | **0.897** | +0.136 (+0.106 to +0.168) |
+| St Petersburg INCART, held out of training, 32 patients | 0.796 | 0.806 | 0.809 | **0.917** | +0.111 (+0.064 to +0.151) |
+| European ST-T, pre-specified confirmatory test, 79 subjects | 0.711 | 0.703 | 0.908 | 0.890 | +0.187 (+0.140 to +0.242) |
+
+![Learned, rhythm and hybrid codes](figures/fig_hybrid.png)
+
+- **Code size:** in cross-validation the 4-byte code differs from the 32-byte code by -0.003 (-0.015 to +0.011). One byte is lower by 0.028.
+- **Confirmatory test:** the comparison on the European ST-T Database was fixed in [`CONFIRMATION_PLAN.md`](CONFIRMATION_PLAN.md) before that database was downloaded, and was run once.
+- **Evaluation protocol:** letting windows of the test patients into training raises the AUROC by 0.061 (+0.002 to +0.102). That gain is an artefact of the protocol.
+- **Encoder:** 3,163 parameters and 0.59 million multiply-accumulate operations per window. A Transformer encoder with 19 times the computation changes the AUROC by -0.012 (-0.046 to +0.029).
+- **Reconstruction coding:** a wavelet coder with a classifier retrained on its output is still 0.054 below the 4-byte code at 64 bytes.
 
 ![Diagnostic rate-distortion curve](figures/fig_rd.png)
 
-- **The encoder is tiny:** 3,163 parameters and 0.59 million multiply-accumulate operations per window.
-- **Training data matters most:** the same 4-byte codec trained on DS1 only (22 records) reaches 0.790; trained on three databases (171 records) it reaches 0.878.
-- **A wavelet compressor needs about 256 bytes** to support the same decision after decoding.
+### What the results do *not* show
 
-### What the learned code does *not* do better
-
-These results are reported in the paper and matter for anyone building on this work.
-
-- With one database held out of training, the 4-byte code reaches 0.796 on St Petersburg INCART and 0.779 on the MIT-BIH Supraventricular Arrhythmia Database.
-- For the simple abnormal-versus-normal question, a hand-crafted RR-interval code is better than the learned code on both held-out databases (0.862 vs 0.816 on INCART; 0.952 vs 0.759 on the Supraventricular database).
+- On the European ST-T Database, whose lead pairs differ from the training data, the hybrid code only equals the RR-interval code alone (-0.017, -0.058 to +0.016). The learned bytes add nothing detectable there.
+- For the abnormal-versus-normal question on the held-out Supraventricular database, the RR-interval code alone is better than the hybrid (0.952 vs 0.907).
+- With the number of training steps held equal, 171 training records instead of 18 give +0.066 (-0.021 to +0.147) on DS2. A benefit of the larger training set is not established for patients whose database is already represented.
 - All results are computational. Nothing was measured on hardware.
-
-![External validation](figures/fig_xdb.png)
 
 ## Repository layout
 
@@ -46,6 +47,8 @@ figures/       figures used in this README and in the paper
 
 | File in `results/` | Contents |
 |---|---|
+| `paired_bootstrap_stats.json` | every paired difference reported in the paper: both means, difference, 95% and 90% intervals, p-value, number of runs and of patients |
+| `per_seed_results_v4.json` | metrics of the later runs: extra Transformer seeds, record-mixed control, matched-size training sets, repeated cross-validation |
 | `per_seed_results.json` | metrics of all 288 training runs (49 configurations), one entry per seed |
 | `new_eval2.json` | three-database experiments: code-size sweep, wavelet coder, leave-one-database-out, paired tests |
 | `new_eval.json` | DS1-only experiments: wavelet/DCT coder, zero-shot external tests, autoencoders |
@@ -54,7 +57,7 @@ figures/       figures used in this README and in the paper
 
 ## Reproduce
 
-Requirements: Python 3.10 or newer, about 2 GB of disk for the data, and 6 to 8 CPU-hours on two cores (no GPU needed).
+Requirements: Python 3.10 or newer, about 2.5 GB of disk for the data, and about 20 CPU-hours on two cores for everything (no GPU needed). `run_all.sh` covers the first 6 to 8 hours; the later experiments are listed in `experiments/README.md`.
 
 ```bash
 git clone https://github.com/azzawi91/task-oriented-semantic-ecg.git
@@ -70,11 +73,11 @@ Exact numbers depend on the PyTorch version and CPU; the published numbers were 
 
 ## Data
 
-No data are stored in this repository. All four databases are public on [PhysioNet](https://physionet.org): MIT-BIH Arrhythmia Database, MIT-BIH Supraventricular Arrhythmia Database, St Petersburg INCART 12-lead Arrhythmia Database, and PTB-XL.
+No data are stored in this repository. All five databases are public on [PhysioNet](https://physionet.org): MIT-BIH Arrhythmia Database, MIT-BIH Supraventricular Arrhythmia Database, St Petersburg INCART 12-lead Arrhythmia Database, European ST-T Database, and PTB-XL.
 
 ## Citation
 
-See `CITATION.cff`. The manuscript is under review; the citation will be updated when it is published.
+See `CITATION.cff`. The citation will be updated when the paper is published.
 
 ## License
 

@@ -35,6 +35,28 @@ def train_one(cache, name, seed, out_dir, overrides=None, log=print):
         tr, va, te = S.dechazal_split(y, g, seed)
         gs = g.astype(str); ext = np.where(np.array([any(s.startswith(p + "_") for p in cfg["pool_dbs"]) for s in gs]))[0]
         tr = np.concatenate([tr, ext])
+    elif cfg["split"] == "pool_mixed":      # as "pool", plus a fixed random half of the DS2 windows in training; test = other half
+        tr, va, te = S.dechazal_split(y, g, seed)
+        gs = g.astype(str); ext = np.where(np.array([any(s.startswith(p + "_") for p in cfg["pool_dbs"]) for s in gs]))[0]
+        perm = np.random.default_rng(777).permutation(len(te)); half = len(te) // 2
+        tr = np.concatenate([tr, ext, te[perm[:half]]]); te = np.sort(te[perm[half:]])
+    elif cfg["split"] == "pool_sub":        # DS1 calibration records as usual; training = seeded subset of records per database
+        tr0, va, te = S.dechazal_split(y, g, seed); gs = g.astype(str); r = np.random.default_rng(1000 + seed); keep = []
+        pools = {"mit": sorted(set(gs[tr0])), "svdb": sorted(set(x for x in gs if x.startswith("svdb_"))), "incart": sorted(set(x for x in gs if x.startswith("incart_")))}
+        for db, n in cfg["sub"].items(): keep += list(r.choice(pools[db], int(n), replace=False))
+        tr = np.where(np.isin(gs, keep))[0]
+    elif cfg["split"] == "cv":              # patient-level 5-fold cross-validation over the three databases, stratified by database
+        gs = g.astype(str); pid = S.patient_ids(gs); use = np.array([p is not None for p in pid]); r = np.random.default_rng(4242 + 1000 * int(cfg.get("cv_rep", 0))); fold_of = {}
+        for db in ("mit", "svdb", "incart"):
+            ps = sorted(set(p for p in pid if p is not None and p.startswith(db + ":"))); r.shuffle(ps)
+            for i, pp in enumerate(ps): fold_of[pp] = i % 5
+        f = np.array([fold_of.get(p, -1) for p in pid]); k = int(cfg["fold"])
+        te = np.where(use & (f == k))[0]
+        mit_tr = sorted(set(p for p in pid if p is not None and p.startswith("mit:") and fold_of[p] != k))
+        val_p = set(np.random.default_rng(seed).choice(mit_tr, 6, replace=False))
+        va = np.where(np.array([p in val_p for p in pid]))[0]
+        dbs = cfg.get("cv_dbs") or ["mit", "svdb", "incart"]
+        tr = np.where(use & (f != k) & np.array([(p is not None) and (p not in val_p) and p.split(":")[0] in dbs for p in pid]))[0]
     elif cfg["split"] == "random":
         tr, va, te = S.record_disjoint_split(y, g, seed)
     elif cfg["split"] == "fold":            # PTB-XL official folds stored in `groups`
@@ -50,6 +72,8 @@ def train_one(cache, name, seed, out_dir, overrides=None, log=print):
     opt = torch.optim.Adam(list(enc.parameters()) + list(dec.parameters()), lr=cfg["lr"])
     loader = DataLoader(TensorDataset(torch.tensor(X[tr]), torch.tensor(y[tr])), batch_size=cfg["batch"], shuffle=True)
     t0 = time.time(); hist = []
+    if cfg.get("match_windows"):            # same number of training windows processed as the full three-database run
+        cfg["epochs"] = max(cfg["epochs"], int(round(cfg["match_windows"] / max(len(tr), 1))))
     for ep in range(cfg["epochs"]):
         enc.train(); dec.train(); tot = 0.0; n = 0
         for xb, yb in loader:

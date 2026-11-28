@@ -1,11 +1,11 @@
 cff-version: 1.2.0
-message: "If you use this code, please cite it as below. The manuscript is under review."
-title: "How many bytes does an arrhythmia decision need? Task-oriented compression of wearable ECG"
+message: "If you use this code, please cite it as below."
+title: "Ten Rhythm Bytes Outperform Twenty-Eight Learned Ones in Compact ECG Codes"
 authors:
   - family-names: Azzawi
     given-names: Mustafa A.
     orcid: "https://orcid.org/0000-0002-9360-4174"
-version: 3.0.0
-date-released: 2026-11-12
+version: 4.0.0
+date-released: 2026-11-28
 repository-code: "https://github.com/azzawi91/task-oriented-semantic-ecg"
 license: MIT
